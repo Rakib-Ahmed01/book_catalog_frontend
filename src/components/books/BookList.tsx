@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
+import useAuth from "../../hooks/useAuth"
 import { TBook } from "../../types"
 import Spinner from "../shared/Spinner"
 import Book from "./Book"
@@ -12,6 +13,7 @@ export default function BookList() {
   const searchText = useSelector((state: RootState) => state.filter.searchText)
   const [genre, setGenre] = useState<string | null>(null)
   const [publicationYear, setPublicationYear] = useState<string | null>(null)
+  const auth = useAuth()
 
   const {
     data: books,
@@ -48,9 +50,11 @@ export default function BookList() {
             onChange={setPublicationYear}
             clearable
           />
-          <Button component={Link} to={"/add-new-book"}>
-            Add Book
-          </Button>
+          {auth ? (
+            <Button component={Link} to={"/add-new-book"}>
+              Add Book
+            </Button>
+          ) : null}
         </Flex>
       </Flex>
       <Grid mt={5}>

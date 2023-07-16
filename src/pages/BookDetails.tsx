@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -7,6 +8,7 @@ import {
   Box,
   Button,
   Card,
+  Center,
   Flex,
   Group,
   Rating,
@@ -37,8 +39,14 @@ export default function BookDetails() {
     useAddNewReviewMutation()
   const accessToken = useSelector(selectAuth).accessToken
 
-  const decodedToken = jwt_decode(accessToken as any as string) as {
+  let decodedToken = {} as {
     _id: string
+  }
+
+  if (auth) {
+    decodedToken = jwt_decode(accessToken as any as string) as {
+      _id: string
+    }
   }
 
   const {
@@ -111,44 +119,51 @@ export default function BookDetails() {
       <ScrollArea mt={10} mx={"auto"} maw={600} mih={"60vh"}>
         <Title order={3}>Reviews</Title>
         <Card shadow="xs" padding="lg" radius="md" withBorder>
-          {auth ? (
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            <form onSubmit={handleCreateReview}>
-              <TextInput
-                placeholder="rating"
-                onChange={(e) => setRating(e.target.value)}
-              />
-              <Textarea
-                placeholder="your review"
-                onChange={(e) => setReviewText(e.target.value)}
-                my={8}
-              />
+          <form onSubmit={handleCreateReview}>
+            <TextInput
+              placeholder="rating"
+              onChange={(e) => setRating(e.target.value)}
+            />
+            <Textarea
+              placeholder="your review"
+              onChange={(e) => setReviewText(e.target.value)}
+              my={8}
+            />
 
+            {auth ? (
               <Button type="submit" disabled={isAddReviewLoading}>
                 Add Review
               </Button>
-            </form>
-          ) : null}
+            ) : (
+              <Button>Login to add review</Button>
+            )}
+          </form>
 
-          {book.data.reviews.map((review: any) => {
-            return (
-              <Box key={review._id} mt={16}>
-                <Flex align={"center"} gap={5}>
-                  <Avatar
-                    src={`https://api.dicebear.com/6.x/lorelei/svg?seed=${review.reviewer.email}`}
-                    ml={5}
-                  />
-                  <Box>
-                    <Text>{review.reviewer.name}</Text>
-                    <Rating value={review.rating} readOnly />
-                  </Box>
-                </Flex>
-                <Text ml={12} mt={4}>
-                  {review.reviewText}
-                </Text>
-              </Box>
-            )
-          })}
+          {book.data.reviews.length ? (
+            book.data.reviews.map((review: any) => {
+              return (
+                <Box key={review._id} mt={16}>
+                  <Flex align={"center"} gap={5}>
+                    <Avatar
+                      src={`https://api.dicebear.com/6.x/lorelei/svg?seed=${review.reviewer.email}`}
+                      ml={5}
+                    ></Avatar>
+                    <Box>
+                      <Text>{review.reviewer.name}</Text>
+                      <Rating value={review.rating} readOnly />
+                    </Box>
+                  </Flex>
+                  <Text ml={12} mt={4}>
+                    {review.reviewText}
+                  </Text>
+                </Box>
+              )
+            })
+          ) : (
+            <Center>
+              <Text>No review is added</Text>
+            </Center>
+          )}
         </Card>
       </ScrollArea>
     </>

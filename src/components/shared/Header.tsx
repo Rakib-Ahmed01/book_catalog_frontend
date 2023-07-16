@@ -16,9 +16,10 @@ import {
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { IconBook } from "@tabler/icons-react"
+import { toast } from "react-hot-toast"
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
-import { selectUser } from "../../features/auth/authSlice"
+import { Link, useNavigate } from "react-router-dom"
+import { selectUser, userLoggedOut } from "../../features/auth/authSlice"
 import { changeSearchText } from "../../features/filter/filterSlice"
 import useAuth from "../../hooks/useAuth"
 import { User } from "../../types"
@@ -99,6 +100,14 @@ export function HeaderMegaMenu() {
   const auth: boolean = useAuth()
   const user = useSelector(selectUser) as any as User
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogOut = () => {
+    dispatch(userLoggedOut)
+    localStorage.removeItem("book-catalog-auth")
+    toast.success("Logged in successfully")
+    navigate("/")
+  }
 
   return (
     <Box pb={10}>
@@ -116,9 +125,11 @@ export function HeaderMegaMenu() {
             <Link to="/books" className={classes.link}>
               Books
             </Link>
-            <Link to="/add-new-book" className={classes.link}>
-              Add New Book
-            </Link>
+            {auth ? (
+              <Link to="/add-new-book" className={classes.link}>
+                Add New Book
+              </Link>
+            ) : null}
             <TextInput
               placeholder="search books"
               onChange={(e) => dispatch(changeSearchText(e.target.value))}
@@ -153,7 +164,7 @@ export function HeaderMegaMenu() {
                   />
                   <Text>{user.name}</Text>
                 </Flex>
-                <Button>Log out</Button>
+                <Button onClick={handleLogOut}>Log out</Button>
               </>
             )}
           </Group>
@@ -197,7 +208,7 @@ export function HeaderMegaMenu() {
               </Link>
             </>
           ) : (
-            <Button>Log out</Button>
+            <Button onClick={handleLogOut}>Log out</Button>
           )}
         </Group>
       </Drawer>
