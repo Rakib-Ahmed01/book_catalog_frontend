@@ -28,18 +28,18 @@ export default function Book(param: Param) {
           Publication Date: {new Date(book.publicationDate).getFullYear()}
         </Text>
 
-        <Link to={`/books/${book._id}`}>
-          <Button
-            variant="light"
-            color="blue"
-            sx={{ textDecoration: "none" }}
-            fullWidth
-            mt="md"
-            radius="md"
-          >
-            Learn more
-          </Button>
-        </Link>
+        <Button
+          variant="light"
+          color="blue"
+          sx={{ textDecoration: "none" }}
+          fullWidth
+          mt="md"
+          radius="md"
+          component={Link}
+          to={`/books/${book._id}`}
+        >
+          Learn more
+        </Button>
       </Card>
     </Grid.Col>
   )

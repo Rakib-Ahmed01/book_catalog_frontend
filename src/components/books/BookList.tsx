@@ -1,6 +1,7 @@
-import { Box, Flex, Grid, Select, Text, Title } from "@mantine/core"
+import { Box, Button, Flex, Grid, Select, Text, Title } from "@mantine/core"
 import { useState } from "react"
 import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
 import { TBook } from "../../types"
@@ -47,6 +48,9 @@ export default function BookList() {
             onChange={setPublicationYear}
             clearable
           />
+          <Button component={Link} to={"/add-new-book"}>
+            Add Book
+          </Button>
         </Flex>
       </Flex>
       <Grid mt={5}>
