@@ -1,4 +1,5 @@
 import { Button, Card, Grid, Group, Text } from "@mantine/core"
+import { Link } from "react-router-dom"
 import { TBook } from "../../types"
 
 type Param = {
@@ -27,9 +28,18 @@ export default function Book(param: Param) {
           Publication Date: {book.publicationDate}
         </Text>
 
-        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-          Learn more
-        </Button>
+        <Link to={`/books/${book._id}`}>
+          <Button
+            variant="light"
+            color="blue"
+            sx={{ textDecoration: "none" }}
+            fullWidth
+            mt="md"
+            radius="md"
+          >
+            Learn more
+          </Button>
+        </Link>
       </Card>
     </Grid.Col>
   )

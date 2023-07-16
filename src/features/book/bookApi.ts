@@ -5,6 +5,9 @@ const bookApi = apiSlice.injectEndpoints({
     getAllBooks: builder.query({
       query: () => ({ url: "/books" }),
     }),
+    getSingleBooks: builder.query({
+      query: (bookId: string) => ({ url: `/books/${bookId}` }),
+    }),
     addNewBook: builder.mutation({
       query: (data) => ({
         url: `/books`,
@@ -15,4 +18,8 @@ const bookApi = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetAllBooksQuery, useAddNewBookMutation } = bookApi
+export const {
+  useGetAllBooksQuery,
+  useAddNewBookMutation,
+  useGetSingleBooksQuery,
+} = bookApi

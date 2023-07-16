@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"
 import Main from "../layout/Main"
 import AddNewBook from "../pages/AddNewBook"
+import BookDetails from "../pages/BookDetails"
 import Books from "../pages/Books"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: "books",
         element: <Books />,
+      },
+      {
+        path: "books/:bookId",
+        element: <BookDetails />,
       },
       {
         path: "add-new-book",
