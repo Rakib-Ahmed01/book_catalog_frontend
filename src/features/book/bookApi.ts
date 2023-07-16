@@ -9,9 +9,11 @@ const bookApi = apiSlice.injectEndpoints({
           genre || ""
         }&publicationDate=${publicationYear || ""}`,
       }),
+      providesTags: ["Books"],
     }),
     getSingleBooks: builder.query({
       query: (bookId: string) => ({ url: `/books/${bookId}` }),
+      providesTags: ["Books"],
     }),
     addNewBook: builder.mutation({
       query: (data) => ({
@@ -19,6 +21,7 @@ const bookApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Books"],
     }),
   }),
 })

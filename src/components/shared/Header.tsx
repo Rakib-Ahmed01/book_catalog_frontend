@@ -107,6 +107,7 @@ export function HeaderMegaMenu() {
     localStorage.removeItem("book-catalog-auth")
     toast.success("Logged in successfully")
     navigate("/")
+    window.location.reload()
   }
 
   return (

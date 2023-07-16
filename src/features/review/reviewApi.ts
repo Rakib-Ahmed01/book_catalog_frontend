@@ -9,6 +9,7 @@ const reviewApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Books"],
     }),
   }),
 })

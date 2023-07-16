@@ -149,7 +149,7 @@ export default function BookDetails() {
                       ml={5}
                     ></Avatar>
                     <Box>
-                      <Text>{review.reviewer.name}</Text>
+                      <Text weight={500}>{review.reviewer.name}</Text>
                       <Rating value={review.rating} readOnly />
                     </Box>
                   </Flex>
