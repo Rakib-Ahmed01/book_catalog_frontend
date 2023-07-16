@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -15,10 +16,13 @@ import {
   Textarea,
   Title,
 } from "@mantine/core"
+import jwt_decode from "jwt-decode"
 import { useState } from "react"
 import { toast } from "react-hot-toast"
+import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import Spinner from "../components/shared/Spinner"
+import { selectAuth } from "../features/auth/authSlice"
 import { useGetSingleBooksQuery } from "../features/book/bookApi"
 import { useAddNewReviewMutation } from "../features/review/reviewApi"
 import useAuth from "../hooks/useAuth"
@@ -31,6 +35,11 @@ export default function BookDetails() {
   const [rating, setRating] = useState("")
   const [addReview, { isLoading: isAddReviewLoading }] =
     useAddNewReviewMutation()
+  const accessToken = useSelector(selectAuth).accessToken
+
+  const decodedToken = jwt_decode(accessToken as any as string) as {
+    _id: string
+  }
 
   const {
     data: book,
@@ -46,7 +55,8 @@ export default function BookDetails() {
     return "There was an error loading the book"
   }
 
-  const handleCreateReview = async () => {
+  const handleCreateReview = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     console.log(reviewText, rating)
     if (!reviewText.length) {
       return toast.error("Please enter review text")
@@ -54,10 +64,22 @@ export default function BookDetails() {
 
     if (!rating) {
       return toast.error("Please enter rating")
+    } else if (
+      Number(rating) < 1 ||
+      Number(rating) > 5 ||
+      isNaN(Number(rating))
+    ) {
+      return toast.error("Rating must be 1-5")
     }
 
     try {
-      await addReview({ reviewText, bookId: book?.data._id }).unwrap()
+      await addReview({
+        reviewText,
+        bookId: book?.data._id,
+        rating: Number(rating),
+        reviewer: decodedToken._id,
+      }).unwrap()
+      toast.success("Review added")
     } catch (error) {
       toast.error((error as ErrorResponse).data.message)
     }
@@ -102,7 +124,9 @@ export default function BookDetails() {
                 my={8}
               />
 
-              <Button disabled={isAddReviewLoading}>Add Review</Button>
+              <Button type="submit" disabled={isAddReviewLoading}>
+                Add Review
+              </Button>
             </form>
           ) : null}
 
