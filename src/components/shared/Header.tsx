@@ -10,14 +10,16 @@ import {
   Group,
   Header,
   Text,
+  TextInput,
   createStyles,
   rem,
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { IconBook } from "@tabler/icons-react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { selectUser } from "../../features/auth/authSlice"
+import { changeSerchText } from "../../features/filter/filterSlice"
 import useAuth from "../../hooks/useAuth"
 import { User } from "../../types"
 
@@ -96,12 +98,15 @@ export function HeaderMegaMenu() {
   const { classes, theme } = useStyles()
   const auth: boolean = useAuth()
   const user = useSelector(selectUser) as any as User
+  const dispatch = useDispatch()
 
   return (
     <Box pb={10}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <IconBook size={30} />
+          <Link to="/">
+            <IconBook size={30} />
+          </Link>
 
           <Group
             sx={{ height: "100%" }}
@@ -114,6 +119,10 @@ export function HeaderMegaMenu() {
             <Link to="/add-new-book" className={classes.link}>
               Add New Book
             </Link>
+            <TextInput
+              placeholder="search books"
+              onChange={(e) => dispatch(changeSerchText(e.target.value))}
+            />
           </Group>
 
           <Group className={classes.hiddenMobile}>

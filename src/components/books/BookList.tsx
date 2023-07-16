@@ -1,11 +1,19 @@
 import { Box, Grid, Title } from "@mantine/core"
+import { useSelector } from "react-redux"
+import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
 import { TBook } from "../../types"
 import Spinner from "../shared/Spinner"
 import Book from "./Book"
 
 export default function BookList() {
-  const { data: books, isLoading, isError } = useGetAllBooksQuery(undefined)
+  const searchText = useSelector((state: RootState) => state.filter.searchText)
+
+  const {
+    data: books,
+    isLoading,
+    isError,
+  } = useGetAllBooksQuery({ searchText })
 
   if (isLoading) {
     return <Spinner />

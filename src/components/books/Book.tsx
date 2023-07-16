@@ -25,7 +25,7 @@ export default function Book(param: Param) {
         </Text>
 
         <Text size="sm" color="dimmed">
-          Publication Date: {book.publicationDate}
+          Publication Date: {new Date(book.publicationDate).getFullYear()}
         </Text>
 
         <Link to={`/books/${book._id}`}>
