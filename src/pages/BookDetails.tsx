@@ -16,7 +16,6 @@ import {
   Text,
   TextInput,
   Textarea,
-  Title,
 } from "@mantine/core"
 import jwt_decode from "jwt-decode"
 import { useState } from "react"
@@ -96,9 +95,8 @@ export default function BookDetails() {
   return (
     <>
       <Box mt={10} mx={"auto"} maw={600}>
-        <Title order={3}>{book.data.title}</Title>
         <Card shadow="xs" padding="lg" radius="md" withBorder>
-          <Group position="apart" mt="md" mb="xs">
+          <Group position="apart" mb="xs">
             <Text weight={500}>{book.data.title}</Text>
           </Group>
 
@@ -116,8 +114,7 @@ export default function BookDetails() {
         </Card>
       </Box>
 
-      <ScrollArea mt={10} mx={"auto"} maw={600} mih={"60vh"}>
-        <Title order={3}>Reviews</Title>
+      <ScrollArea mb={16} mt={32} mx={"auto"} maw={600} mih={"60vh"}>
         <Card shadow="xs" padding="lg" radius="md" withBorder>
           <form onSubmit={handleCreateReview}>
             <TextInput
