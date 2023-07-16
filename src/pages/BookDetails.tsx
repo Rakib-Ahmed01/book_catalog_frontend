@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -17,34 +18,42 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core"
+import { IconEdit, IconTrash } from "@tabler/icons-react"
 import jwt_decode from "jwt-decode"
 import { useState } from "react"
 import { toast } from "react-hot-toast"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Spinner from "../components/shared/Spinner"
 import { selectAuth } from "../features/auth/authSlice"
-import { useGetSingleBooksQuery } from "../features/book/bookApi"
+import {
+  useDeleteBookMutation,
+  useGetSingleBooksQuery,
+} from "../features/book/bookApi"
 import { useAddNewReviewMutation } from "../features/review/reviewApi"
 import useAuth from "../hooks/useAuth"
 import { ErrorResponse } from "../types"
 
 export default function BookDetails() {
   const { bookId } = useParams()
-  const auth = useAuth()
+  const auth: boolean = useAuth()
   const [reviewText, setReviewText] = useState("")
   const [rating, setRating] = useState("")
   const [addReview, { isLoading: isAddReviewLoading }] =
     useAddNewReviewMutation()
+  const [deleteBook] = useDeleteBookMutation()
+  const navigate = useNavigate()
   const accessToken = useSelector(selectAuth).accessToken
 
   let decodedToken = {} as {
     _id: string
+    email: string
   }
 
   if (auth) {
     decodedToken = jwt_decode(accessToken as any as string) as {
       _id: string
+      email: string
     }
   }
 
@@ -92,13 +101,40 @@ export default function BookDetails() {
     }
   }
 
+  const handleDelete = async () => {
+    const isSure = window.confirm("Do you really want to delete this book?")
+    if (!isSure) {
+      return
+    }
+    try {
+      await deleteBook(book.data._id as any as string).unwrap()
+      toast.success("Book deleted successfully")
+      navigate("/books")
+    } catch (error) {
+      toast.error((error as ErrorResponse).data.message)
+    }
+  }
+
   return (
     <>
       <Box mt={10} mx={"auto"} maw={600}>
         <Card shadow="xs" padding="lg" radius="md" withBorder>
-          <Group position="apart" mb="xs">
-            <Text weight={500}>{book.data.title}</Text>
-          </Group>
+          <Flex justify={"space-between"} align={"center"}>
+            <Group position="apart" mb="xs">
+              <Flex gap={4} align={"center"}>
+                <Text weight={500}>{book.data.title}</Text>
+                <Badge>{book.data.email}</Badge>
+              </Flex>
+            </Group>
+            {auth && decodedToken?.email === book.data.email ? (
+              <Flex gap={8}>
+                <Link to={`/edit-book/${book.data._id}`}>
+                  <IconEdit size={20} fontWeight={400} />
+                </Link>
+                <IconTrash size={20} fontWeight={400} onClick={handleDelete} />
+              </Flex>
+            ) : null}
+          </Flex>
 
           <Text size="sm" color="dimmed">
             Author: {book.data.author}
@@ -124,7 +160,7 @@ export default function BookDetails() {
             <Textarea
               placeholder="your review"
               onChange={(e) => setReviewText(e.target.value)}
-              my={8}
+              my={10}
             />
 
             {auth ? (

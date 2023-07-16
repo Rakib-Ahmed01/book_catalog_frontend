@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Group, Text } from "@mantine/core"
+import { Badge, Button, Card, Flex, Grid, Group, Text } from "@mantine/core"
 import { Link } from "react-router-dom"
 import { TBook } from "../../types"
 
@@ -13,7 +13,10 @@ export default function Book(param: Param) {
     <Grid.Col xs={1} sm={2} md={2} lg={3} key={book._id}>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Group position="apart" mt="md" mb="xs">
-          <Text weight={500}>{book.title}</Text>
+          <Flex gap={4} direction={"column"}>
+            <Text weight={500}>{book.title}</Text>
+            <Badge>{book.email}</Badge>
+          </Flex>
         </Group>
 
         <Text size="sm" color="dimmed">

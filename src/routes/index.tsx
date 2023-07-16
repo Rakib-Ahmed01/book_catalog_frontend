@@ -3,6 +3,7 @@ import Main from "../layout/Main"
 import AddNewBook from "../pages/AddNewBook"
 import BookDetails from "../pages/BookDetails"
 import Books from "../pages/Books"
+import EditBook from "../pages/EditBook"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Register from "../pages/Register"
@@ -38,6 +39,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <AddNewBook />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "edit-book/:bookId",
+        element: (
+          <PrivateRoute>
+            <EditBook />
           </PrivateRoute>
         ),
       },
