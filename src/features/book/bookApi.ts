@@ -4,7 +4,11 @@ import { apiSlice } from "../api/apiSlice"
 const bookApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllBooks: builder.query({
-      query: ({ searchText }) => ({ url: `/books?searchTerm=${searchText}` }),
+      query: ({ searchText, genre, publicationYear }) => ({
+        url: `/books?searchTerm=${searchText}&genre=${
+          genre || ""
+        }&publicationDate=${publicationYear || ""}`,
+      }),
     }),
     getSingleBooks: builder.query({
       query: (bookId: string) => ({ url: `/books/${bookId}` }),

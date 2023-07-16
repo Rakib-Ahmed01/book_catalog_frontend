@@ -2,17 +2,26 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   searchText: "",
+  genre: "",
+  publicationDate: "",
 }
 
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    changeSerchText: (state, action) => {
+    changeSearchText: (state, action) => {
+      state.searchText = action.payload
+    },
+    changeGenre: (state, action) => {
+      state.searchText = action.payload
+    },
+    changePublicationDate: (state, action) => {
       state.searchText = action.payload
     },
   },
 })
 
 export default filterSlice.reducer
-export const { changeSerchText } = filterSlice.actions
+export const { changeSearchText, changeGenre, changePublicationDate } =
+  filterSlice.actions

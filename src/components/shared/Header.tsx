@@ -19,7 +19,7 @@ import { IconBook } from "@tabler/icons-react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { selectUser } from "../../features/auth/authSlice"
-import { changeSerchText } from "../../features/filter/filterSlice"
+import { changeSearchText } from "../../features/filter/filterSlice"
 import useAuth from "../../hooks/useAuth"
 import { User } from "../../types"
 
@@ -121,7 +121,7 @@ export function HeaderMegaMenu() {
             </Link>
             <TextInput
               placeholder="search books"
-              onChange={(e) => dispatch(changeSerchText(e.target.value))}
+              onChange={(e) => dispatch(changeSearchText(e.target.value))}
             />
           </Group>
 

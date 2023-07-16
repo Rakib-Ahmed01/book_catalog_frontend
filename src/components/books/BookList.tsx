@@ -1,4 +1,5 @@
-import { Box, Flex, Grid, Select, Title } from "@mantine/core"
+import { Box, Flex, Grid, Select, Text, Title } from "@mantine/core"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
@@ -8,12 +9,14 @@ import Book from "./Book"
 
 export default function BookList() {
   const searchText = useSelector((state: RootState) => state.filter.searchText)
+  const [genre, setGenre] = useState<string | null>(null)
+  const [publicationYear, setPublicationYear] = useState<string | null>(null)
 
   const {
     data: books,
     isLoading,
     isError,
-  } = useGetAllBooksQuery({ searchText })
+  } = useGetAllBooksQuery({ searchText, genre, publicationYear })
 
   if (isLoading) {
     return <Spinner />
@@ -33,17 +36,27 @@ export default function BookList() {
           <Select
             placeholder="filter by genre"
             data={books?.filterData?.genres || []}
+            value={genre}
+            onChange={setGenre}
+            clearable
           />
           <Select
             placeholder="filter by year"
             data={books?.filterData?.publicationYears || []}
+            value={publicationYear}
+            onChange={setPublicationYear}
+            clearable
           />
         </Flex>
       </Flex>
       <Grid mt={5}>
-        {(books.data as TBook[]).map((book) => {
-          return <Book book={book} key={book._id} />
-        })}
+        {books.data.length ? (
+          (books.data as TBook[]).map((book) => {
+            return <Book book={book} key={book._id} />
+          })
+        ) : (
+          <Text>No book found</Text>
+        )}
       </Grid>
     </Box>
   )
