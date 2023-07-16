@@ -18,9 +18,9 @@ export default function BookList() {
   return (
     <Box>
       <Title order={2} ml={0}>
-        Recently Added Books
+        All Books
       </Title>
-      <Grid mt={10}>
+      <Grid mt={5}>
         {(books.data as TBook[]).map((book) => {
           return <Book book={book} key={book._id} />
         })}
