@@ -9,16 +9,28 @@ import {
   Flex,
   Group,
   Rating,
+  ScrollArea,
   Text,
+  TextInput,
   Textarea,
   Title,
 } from "@mantine/core"
+import { useState } from "react"
+import { toast } from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import Spinner from "../components/shared/Spinner"
 import { useGetSingleBooksQuery } from "../features/book/bookApi"
+import { useAddNewReviewMutation } from "../features/review/reviewApi"
+import useAuth from "../hooks/useAuth"
+import { ErrorResponse } from "../types"
 
 export default function BookDetails() {
   const { bookId } = useParams()
+  const auth = useAuth()
+  const [reviewText, setReviewText] = useState("")
+  const [rating, setRating] = useState("")
+  const [addReview, { isLoading: isAddReviewLoading }] =
+    useAddNewReviewMutation()
 
   const {
     data: book,
@@ -32,6 +44,23 @@ export default function BookDetails() {
 
   if (isError) {
     return "There was an error loading the book"
+  }
+
+  const handleCreateReview = async () => {
+    console.log(reviewText, rating)
+    if (!reviewText.length) {
+      return toast.error("Please enter review text")
+    }
+
+    if (!rating) {
+      return toast.error("Please enter rating")
+    }
+
+    try {
+      await addReview({ reviewText, bookId: book?.data._id }).unwrap()
+    } catch (error) {
+      toast.error((error as ErrorResponse).data.message)
+    }
   }
 
   return (
@@ -57,13 +86,25 @@ export default function BookDetails() {
         </Card>
       </Box>
 
-      <Box mt={10} mx={"auto"} maw={600}>
+      <ScrollArea mt={10} mx={"auto"} maw={600} mih={"60vh"}>
         <Title order={3}>Reviews</Title>
         <Card shadow="xs" padding="lg" radius="md" withBorder>
-          <form>
-            <Textarea placeholder="your review" />
-            <Button mt={8}>Add Review</Button>
-          </form>
+          {auth ? (
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            <form onSubmit={handleCreateReview}>
+              <TextInput
+                placeholder="rating"
+                onChange={(e) => setRating(e.target.value)}
+              />
+              <Textarea
+                placeholder="your review"
+                onChange={(e) => setReviewText(e.target.value)}
+                my={8}
+              />
+
+              <Button disabled={isAddReviewLoading}>Add Review</Button>
+            </form>
+          ) : null}
 
           {book.data.reviews.map((review: any) => {
             return (
@@ -85,7 +126,7 @@ export default function BookDetails() {
             )
           })}
         </Card>
-      </Box>
+      </ScrollArea>
     </>
   )
 }
