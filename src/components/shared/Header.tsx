@@ -105,7 +105,7 @@ export function HeaderMegaMenu() {
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Link to="/">
-            <IconBook size={30} />
+            <IconBook size={30} color={theme.colors.blue[5]} />
           </Link>
 
           <Group

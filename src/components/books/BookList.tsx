@@ -1,4 +1,4 @@
-import { Box, Grid, Title } from "@mantine/core"
+import { Box, Flex, Grid, Select, Title } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
@@ -25,9 +25,21 @@ export default function BookList() {
 
   return (
     <Box>
-      <Title order={2} ml={0}>
-        All Books
-      </Title>
+      <Flex justify={"space-between"}>
+        <Title order={2} ml={0}>
+          All Books
+        </Title>
+        <Flex gap={4}>
+          <Select
+            placeholder="filter by genre"
+            data={books?.filterData?.genres || []}
+          />
+          <Select
+            placeholder="filter by year"
+            data={books?.filterData?.publicationYears || []}
+          />
+        </Flex>
+      </Flex>
       <Grid mt={5}>
         {(books.data as TBook[]).map((book) => {
           return <Book book={book} key={book._id} />
