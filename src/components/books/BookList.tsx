@@ -1,9 +1,19 @@
-import { Box, Button, Flex, Grid, Select, Text, Title } from "@mantine/core"
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Select,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core"
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { RootState } from "../../app/store"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
+import { changeSearchText } from "../../features/filter/filterSlice"
 import useAuth from "../../hooks/useAuth"
 import { TBook } from "../../types"
 import Spinner from "../shared/Spinner"
@@ -14,6 +24,7 @@ export default function BookList() {
   const [genre, setGenre] = useState<string | null>(null)
   const [publicationYear, setPublicationYear] = useState<string | null>(null)
   const auth = useAuth()
+  const dispatch = useDispatch()
 
   const {
     data: books,
@@ -36,6 +47,10 @@ export default function BookList() {
           All Books
         </Title>
         <Flex gap={4}>
+          <TextInput
+            placeholder="search books by title, author or genre"
+            onChange={(e) => dispatch(changeSearchText(e.target.value))}
+          />
           <Select
             placeholder="filter by genre"
             data={books?.filterData?.genres || []}

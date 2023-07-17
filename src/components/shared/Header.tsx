@@ -10,7 +10,6 @@ import {
   Group,
   Header,
   Text,
-  TextInput,
   createStyles,
   rem,
 } from "@mantine/core"
@@ -20,7 +19,6 @@ import { toast } from "react-hot-toast"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { selectUser, userLoggedOut } from "../../features/auth/authSlice"
-import { changeSearchText } from "../../features/filter/filterSlice"
 import useAuth from "../../hooks/useAuth"
 import { User } from "../../types"
 
@@ -127,14 +125,18 @@ export function HeaderMegaMenu() {
               Books
             </Link>
             {auth ? (
-              <Link to="/add-new-book" className={classes.link}>
-                Add New Book
-              </Link>
+              <>
+                <Link to="/add-new-book" className={classes.link}>
+                  Add New Book
+                </Link>{" "}
+                <Link to="/wishlist" className={classes.link}>
+                  Wishlist
+                </Link>
+                <Link to="/currently-reading" className={classes.link}>
+                  Currently Reading
+                </Link>
+              </>
             ) : null}
-            <TextInput
-              placeholder="search books"
-              onChange={(e) => dispatch(changeSearchText(e.target.value))}
-            />
           </Group>
 
           <Group className={classes.hiddenMobile}>
