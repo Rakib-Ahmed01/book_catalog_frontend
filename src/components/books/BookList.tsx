@@ -85,7 +85,7 @@ export default function BookList() {
               <Book
                 book={book}
                 key={book._id}
-                isBookmarked={wishlists.includes(book._id)}
+                bookmarkId={wishlists.find((w: string) => w == book._id)}
               />
             )
           })

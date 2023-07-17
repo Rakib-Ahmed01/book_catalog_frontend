@@ -5,25 +5,41 @@ import { toast } from "react-hot-toast"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { selectUser } from "../../features/auth/authSlice"
-import { useAddNewWishlistMutation } from "../../features/wishlist/wishlistApi"
+
+import {
+  useAddNewWishlistMutation,
+  useDeleteWishlistMutation,
+} from "../../features/wishlist/wishlistApi"
 import useAuth from "../../hooks/useAuth"
 import { ErrorResponse, TBook } from "../../types"
 
 type Param = {
   book: TBook
-  isBookmarked: boolean
+  bookmarkId: string
 }
 
 export default function Book(param: Param) {
-  const { book, isBookmarked } = param
+  const { book, bookmarkId } = param
   const [addWishlist] = useAddNewWishlistMutation()
+  const [deleteWishlist] = useDeleteWishlistMutation()
   const auth = useAuth()
   const user = useSelector(selectUser) as unknown as { email: string }
 
-  const handleBookmark = async () => {
+  console.log(bookmarkId)
+
+  const handleAddBookmark = async () => {
     try {
       await addWishlist({ bookId: book._id, email: user.email }).unwrap()
       toast.success("Bookmark created successfully")
+    } catch (error) {
+      toast.error((error as ErrorResponse).data.message)
+    }
+  }
+
+  const handleDeleteBookmark = async () => {
+    try {
+      await deleteWishlist(bookmarkId).unwrap()
+      toast.success("Bookmark deleted successfully")
     } catch (error) {
       toast.error((error as ErrorResponse).data.message)
     }
@@ -39,10 +55,16 @@ export default function Book(param: Param) {
               <Badge>{book.email}</Badge>
             </Flex>
             {auth ? (
-              isBookmarked ? (
-                <IconBookmarkMinus cursor={"pointer"} />
+              bookmarkId ? (
+                <IconBookmarkMinus
+                  cursor={"pointer"}
+                  onClick={handleDeleteBookmark}
+                />
               ) : (
-                <IconBookmarkPlus cursor={"pointer"} onClick={handleBookmark} />
+                <IconBookmarkPlus
+                  cursor={"pointer"}
+                  onClick={handleAddBookmark}
+                />
               )
             ) : null}
           </Flex>

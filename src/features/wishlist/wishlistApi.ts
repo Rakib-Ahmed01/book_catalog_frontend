@@ -17,8 +17,18 @@ const wishlistApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Books"],
     }),
+    deleteWishlist: builder.mutation({
+      query: (wishlistId: string) => ({
+        url: `/wishlists/${wishlistId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Books"],
+    }),
   }),
 })
 
-export const { useAddNewWishlistMutation, useGetAllWishlistsQuery } =
-  wishlistApi
+export const {
+  useAddNewWishlistMutation,
+  useGetAllWishlistsQuery,
+  useDeleteWishlistMutation,
+} = wishlistApi
