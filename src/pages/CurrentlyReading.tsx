@@ -5,12 +5,12 @@ import { useSelector } from "react-redux"
 import Book from "../components/books/Book"
 import Spinner from "../components/shared/Spinner"
 import { selectUser } from "../features/auth/authSlice"
-import { useGetAllWishlistsQuery } from "../features/wishlist/wishlistApi"
+import { useGetAllReadingsQuery } from "../features/reading/wishlistApi"
 
-export default function WIshLists() {
+export default function CurrentlyReading() {
   const user = useSelector(selectUser) as unknown as { email: string }
-  const { data, isLoading, isError } = useGetAllWishlistsQuery(user?.email)
-  const wishlists = data?.data || []
+  const { data, isLoading, isError } = useGetAllReadingsQuery(user?.email)
+  const readings = data?.data || []
 
   if (isLoading) {
     return <Spinner />
@@ -24,24 +24,24 @@ export default function WIshLists() {
     <Box>
       <Flex justify={"space-between"}>
         <Title order={2} ml={0}>
-          Wishlists
+          Currently Reading
         </Title>
       </Flex>
       <Grid mt={5}>
-        {wishlists.length ? (
-          wishlists.map((wishlist: any) => {
+        {readings.length ? (
+          readings.map((wishlist: any) => {
             return (
               <Book
                 book={wishlist.bookId}
                 key={wishlist.bookId._id}
-                bookmarkId={wishlists.find(
+                readingId={readings.find(
                   (w: any) => w.bookId._id == wishlist.bookId._id
                 )}
               />
             )
           })
         ) : (
-          <Text>No wishlist found</Text>
+          <Text>You are not reading any book</Text>
         )}
       </Grid>
     </Box>

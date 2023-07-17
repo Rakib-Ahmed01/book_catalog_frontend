@@ -3,6 +3,7 @@ import Main from "../layout/Main"
 import AddNewBook from "../pages/AddNewBook"
 import BookDetails from "../pages/BookDetails"
 import Books from "../pages/Books"
+import CurrentlyReading from "../pages/CurrentlyReading"
 import EditBook from "../pages/EditBook"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
@@ -56,6 +57,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <WIshLists />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "currently-reading",
+        element: (
+          <PrivateRoute>
+            <CurrentlyReading />
           </PrivateRoute>
         ),
       },

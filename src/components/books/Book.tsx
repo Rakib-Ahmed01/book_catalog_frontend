@@ -25,8 +25,8 @@ import { ErrorResponse, TBook } from "../../types"
 
 type Param = {
   book: TBook
-  bookmarkId: { _id: string }
-  readingId: { _id: string }
+  bookmarkId?: { _id: string }
+  readingId?: { _id: string }
 }
 
 export default function Book(param: Param) {
@@ -56,7 +56,7 @@ export default function Book(param: Param) {
   const handleDeleteBookmark = async () => {
     if (!isdeleteWishlistLoading) {
       try {
-        await deleteWishlist(bookmarkId._id).unwrap()
+        await deleteWishlist(bookmarkId!._id).unwrap()
         toast.success("Bookmark deleted successfully")
       } catch (error) {
         toast.error((error as ErrorResponse).data.message)
@@ -78,7 +78,7 @@ export default function Book(param: Param) {
   const handleDeleteReading = async () => {
     if (!isdeleteReadingLoading) {
       try {
-        await deleteReading(readingId._id).unwrap()
+        await deleteReading(readingId!._id).unwrap()
         toast.success("Reading deleted successfully")
       } catch (error) {
         toast.error((error as ErrorResponse).data.message)
