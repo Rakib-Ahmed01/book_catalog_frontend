@@ -17,6 +17,7 @@ import { RootState } from "../../app/store"
 import { selectUser } from "../../features/auth/authSlice"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
 import { changeSearchText } from "../../features/filter/filterSlice"
+import { useGetAllReadingsQuery } from "../../features/reading/wishlistApi"
 import { useGetAllWishlistsQuery } from "../../features/wishlist/wishlistApi"
 import useAuth from "../../hooks/useAuth"
 import { TBook } from "../../types"
@@ -31,7 +32,9 @@ export default function BookList() {
   const dispatch = useDispatch()
   const user = useSelector(selectUser) as unknown as { email: string }
   const { data } = useGetAllWishlistsQuery(user?.email)
+  const { data: readingsData } = useGetAllReadingsQuery(user?.email)
   const wishlists = data?.data || []
+  const readings = readingsData?.data || []
 
   const {
     data: books,
@@ -89,6 +92,7 @@ export default function BookList() {
                 bookmarkId={wishlists.find(
                   (w: any) => w.bookId._id == book._id
                 )}
+                readingId={readings.find((w: any) => w.bookId._id == book._id)}
               />
             )
           })
