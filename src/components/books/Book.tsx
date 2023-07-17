@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Badge, Button, Card, Flex, Grid, Group, Text } from "@mantine/core"
-import { IconBookmark } from "@tabler/icons-react"
+import { IconBookmarkMinus, IconBookmarkPlus } from "@tabler/icons-react"
 import { toast } from "react-hot-toast"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
@@ -11,11 +11,12 @@ import { ErrorResponse, TBook } from "../../types"
 
 type Param = {
   book: TBook
+  isBookmarked: boolean
 }
 
 export default function Book(param: Param) {
-  const { book } = param
-  const [addWishlist, { isLoading }] = useAddNewWishlistMutation()
+  const { book, isBookmarked } = param
+  const [addWishlist] = useAddNewWishlistMutation()
   const auth = useAuth()
   const user = useSelector(selectUser) as unknown as { email: string }
 
@@ -38,7 +39,11 @@ export default function Book(param: Param) {
               <Badge>{book.email}</Badge>
             </Flex>
             {auth ? (
-              <IconBookmark cursor={"pointer"} onClick={handleBookmark} />
+              isBookmarked ? (
+                <IconBookmarkMinus cursor={"pointer"} />
+              ) : (
+                <IconBookmarkPlus cursor={"pointer"} onClick={handleBookmark} />
+              )
             ) : null}
           </Flex>
         </Group>

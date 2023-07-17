@@ -3,6 +3,12 @@ import { apiSlice } from "../api/apiSlice"
 
 const wishlistApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getAllWishlists: builder.query({
+      query: (email: string) => ({
+        url: `/wishlists?email=${email}`,
+      }),
+      providesTags: ["Books"],
+    }),
     addNewWishlist: builder.mutation({
       query: (data) => ({
         url: `/wishlists`,
@@ -14,4 +20,5 @@ const wishlistApi = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useAddNewWishlistMutation } = wishlistApi
+export const { useAddNewWishlistMutation, useGetAllWishlistsQuery } =
+  wishlistApi

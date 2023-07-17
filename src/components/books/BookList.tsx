@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Box,
   Button,
@@ -12,8 +13,10 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { RootState } from "../../app/store"
+import { selectUser } from "../../features/auth/authSlice"
 import { useGetAllBooksQuery } from "../../features/book/bookApi"
 import { changeSearchText } from "../../features/filter/filterSlice"
+import { useGetAllWishlistsQuery } from "../../features/wishlist/wishlistApi"
 import useAuth from "../../hooks/useAuth"
 import { TBook } from "../../types"
 import Spinner from "../shared/Spinner"
@@ -25,6 +28,9 @@ export default function BookList() {
   const [publicationYear, setPublicationYear] = useState<string | null>(null)
   const auth = useAuth()
   const dispatch = useDispatch()
+  const user = useSelector(selectUser) as unknown as { email: string }
+  const { data } = useGetAllWishlistsQuery(user?.email)
+  const wishlists = data?.data || []
 
   const {
     data: books,
@@ -75,7 +81,13 @@ export default function BookList() {
       <Grid mt={5}>
         {books.data.length ? (
           (books.data as TBook[]).map((book) => {
-            return <Book book={book} key={book._id} />
+            return (
+              <Book
+                book={book}
+                key={book._id}
+                isBookmarked={wishlists.includes(book._id)}
+              />
+            )
           })
         ) : (
           <Text>No book found</Text>
