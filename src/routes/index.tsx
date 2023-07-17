@@ -7,6 +7,7 @@ import EditBook from "../pages/EditBook"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Register from "../pages/Register"
+import WIshLists from "../pages/WIshLists"
 import PrivateRoute from "./PrivateRoute"
 
 export const router = createBrowserRouter([
@@ -47,6 +48,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <EditBook />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "wishlists",
+        element: (
+          <PrivateRoute>
+            <WIshLists />
           </PrivateRoute>
         ),
       },

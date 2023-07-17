@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Box,
@@ -85,7 +86,9 @@ export default function BookList() {
               <Book
                 book={book}
                 key={book._id}
-                bookmarkId={wishlists.find((w: string) => w == book._id)}
+                bookmarkId={wishlists.find(
+                  (w: any) => w.bookId._id == book._id
+                )}
               />
             )
           })

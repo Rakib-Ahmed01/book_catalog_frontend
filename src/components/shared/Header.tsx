@@ -96,7 +96,7 @@ export function HeaderMegaMenu() {
     useDisclosure(false)
   const { classes, theme } = useStyles()
   const auth: boolean = useAuth()
-  const user = useSelector(selectUser) as any as User
+  const user = useSelector(selectUser) as unknown as User
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -129,7 +129,7 @@ export function HeaderMegaMenu() {
                 <Link to="/add-new-book" className={classes.link}>
                   Add New Book
                 </Link>{" "}
-                <Link to="/wishlist" className={classes.link}>
+                <Link to="/wishlists" className={classes.link}>
                   Wishlist
                 </Link>
                 <Link to="/currently-reading" className={classes.link}>

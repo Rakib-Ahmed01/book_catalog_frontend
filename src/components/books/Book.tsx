@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Badge, Button, Card, Flex, Grid, Group, Text } from "@mantine/core"
 import { IconBookmarkMinus, IconBookmarkPlus } from "@tabler/icons-react"
@@ -15,7 +16,7 @@ import { ErrorResponse, TBook } from "../../types"
 
 type Param = {
   book: TBook
-  bookmarkId: string
+  bookmarkId: { _id: string }
 }
 
 export default function Book(param: Param) {
@@ -25,12 +26,10 @@ export default function Book(param: Param) {
   const auth = useAuth()
   const user = useSelector(selectUser) as unknown as { email: string }
 
-  console.log(bookmarkId)
-
   const handleAddBookmark = async () => {
     try {
       await addWishlist({ bookId: book._id, email: user.email }).unwrap()
-      toast.success("Bookmark created successfully")
+      toast.success("Bookmark added successfully")
     } catch (error) {
       toast.error((error as ErrorResponse).data.message)
     }
@@ -38,7 +37,7 @@ export default function Book(param: Param) {
 
   const handleDeleteBookmark = async () => {
     try {
-      await deleteWishlist(bookmarkId).unwrap()
+      await deleteWishlist(bookmarkId._id).unwrap()
       toast.success("Bookmark deleted successfully")
     } catch (error) {
       toast.error((error as ErrorResponse).data.message)
