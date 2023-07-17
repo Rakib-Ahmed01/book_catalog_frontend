@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Badge, Button, Card, Flex, Grid, Group, Text } from "@mantine/core"
 import { IconBookmark } from "@tabler/icons-react"
+import { toast } from "react-hot-toast"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { TBook } from "../../types"
+import { selectUser } from "../../features/auth/authSlice"
+import { useAddNewWishlistMutation } from "../../features/wishlist/wishlistApi"
+import useAuth from "../../hooks/useAuth"
+import { ErrorResponse, TBook } from "../../types"
 
 type Param = {
   book: TBook
@@ -9,6 +15,18 @@ type Param = {
 
 export default function Book(param: Param) {
   const { book } = param
+  const [addWishlist, { isLoading }] = useAddNewWishlistMutation()
+  const auth = useAuth()
+  const user = useSelector(selectUser) as unknown as { email: string }
+
+  const handleBookmark = async () => {
+    try {
+      await addWishlist({ bookId: book._id, email: user.email }).unwrap()
+      toast.success("Bookmark created successfully")
+    } catch (error) {
+      toast.error((error as ErrorResponse).data.message)
+    }
+  }
 
   return (
     <Grid.Col xs={1} sm={2} md={2} lg={3} key={book._id}>
@@ -19,7 +37,9 @@ export default function Book(param: Param) {
               <Text weight={500}>{book.title}</Text>
               <Badge>{book.email}</Badge>
             </Flex>
-            <IconBookmark />
+            {auth ? (
+              <IconBookmark cursor={"pointer"} onClick={handleBookmark} />
+            ) : null}
           </Flex>
         </Group>
 
